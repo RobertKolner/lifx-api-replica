@@ -44,7 +44,8 @@ def list_lights():
 
 @app.route('/v1/lights/all/state', methods=['PUT'])
 def set_state():
-    request_data = request.data.copy()
+    print request.data
+    request_data = json.loads(request.data).copy()
     color = request_data.pop('color', None)
     if color is not None:
         rgb = webcolors.hex_to_rgb(color)
