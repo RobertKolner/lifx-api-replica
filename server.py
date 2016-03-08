@@ -44,8 +44,7 @@ def list_lights():
 
 @app.route('/v1/lights/all/state', methods=['PUT'])
 def set_state():
-    print request.data
-    request_data = json.loads(request.data).copy()
+    request_data = request.get_json().copy()
     color = request_data.pop('color', None)
     if color is not None:
         rgb = webcolors.hex_to_rgb(color)
@@ -57,13 +56,14 @@ def set_state():
     power = request_data.pop('power', None)
     if power is not None:
         if power in ['on', 'off']:
+            data['power'] = power
             request_data['power'] = power
         else:
             return json.dumps({
                 'error': "Invalid value for 'power'!"
             }, indent=4), 400
 
-    for key, value in json.loads(request_data).items():
+    for key, value in request_data.items():
         data['key'] = value
 
     return json.dumps({
