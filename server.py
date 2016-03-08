@@ -4,6 +4,7 @@ from flask import Flask, request, render_template
 import colorsys
 import json
 import uuid
+import webcolors
 
 
 app = Flask(__name__)
