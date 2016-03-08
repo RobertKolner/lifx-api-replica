@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from datetime import datetime
 from flask import Flask, request
+import colorsys
 import json
 import uuid
 
@@ -36,14 +37,32 @@ def list_lights():
             "saturation": data['saturation'],
             "kelvin": data['kelvin'],
         },
-        "brightness": brightness,
+        "brightness": data['brightness'],
         "last_seen": datetime.now().isoformat(),
     }, indent=4)
 
 
 @app.route('/v1/lights/all/state', methods=['PUT'])
 def set_state():
-    for key, value in json.loads(request.data).items():
+    request_data = request.data.copy()
+    color = request_data.pop('color', None)
+    if color is not None:
+        rgb = webcolors.hex_to_rgb(color)
+        hls = colorsys.rgb_to_hls(*rgb)
+        data['hue'] = hls[0]
+        data['saturation'] = hls[2]
+        data['brightness'] = hls[1]
+
+    power = request_data.pop('power', None)
+    if power is not None:
+        if power in ['on', 'off']:
+            request_data['power'] = power
+        else:
+            return json.dumps({
+                'error': "Invalid value for 'power'!"
+            }, indent=4), 400
+
+    for key, value in json.loads(request_data).items():
         data['key'] = value
 
     return json.dumps({
