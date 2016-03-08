@@ -57,5 +57,19 @@ def set_state():
     }, indent=4)
 
 
+@app.route('/v1/lights/all/toggle', methods=['POST'])
+def toggle():
+    data['power'] = 'on' if data['power'] == 'off' else 'off'
+    return json.dumps({
+        "results": [
+            {
+                "id": "l1fxl4mp",
+                "label": "lamp",
+                "status": "ok",
+            }
+        ]
+    }, indent=4)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
