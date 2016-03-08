@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from datetime import datetime
-from flask import Flask, request
+from flask import Flask, request, render_template
 import colorsys
 import json
 import uuid
@@ -11,17 +11,17 @@ app.config.from_object(__name__)
 
 
 data = dict(
-    power = "off"
-    brightness = 1.0
-    hue = 0.0
-    saturation = 0.0
+    power = "off",
+    brightness = 1.0,
+    hue = 0.0,
+    saturation = 0.0,
     kelvin = 3500
 )
 
 
 @app.route('/')
 def main():
-    return "It works!"
+    return render_template('index.html')
 
 
 @app.route('/v1/lights/all')
