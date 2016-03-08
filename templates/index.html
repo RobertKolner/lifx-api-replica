@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+<script src="http://code.jquery.com/jquery-1.12.1.js"></script>
+</head>
+<body>
+
+<script>
+    $(document).ready(function() {
+        function updateBackground() {
+            $.getJSON('/v1/lights/all', function(data) {
+                console.log(data);
+                if(data.power == 'off') {
+                    $('body').css('background-color', 'black');
+                } else {
+                    var hsl = 'hsl('+data.color.hue+', '+data.color.saturation+','+data.brightness+')';
+                    $('body').css('background-color', hsl)
+                }
+            });
+        }
+        setInterval(updateBackground, 1000);
+    })
+</script>
+</body>
+</html>
